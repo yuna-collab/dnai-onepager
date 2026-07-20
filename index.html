@@ -426,7 +426,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         var page = document.querySelector('doc-page');
         if (!page) return;
         var avail = document.documentElement.clientWidth;
-        var factor = avail / PAGE_WIDTH;
+        // nie über Originalgröße (1000px) hinaus, sonst läuft das Blatt über
+        var factor = Math.min(1, avail / PAGE_WIDTH);
         page.style.transformOrigin = 'top left';
         page.style.transform = 'scale(' + factor + ')';
         page.style.margin = '0';
