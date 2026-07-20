@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html style="background:#FFFFFF;">
 <head>
   <meta charset="utf-8">
   <title>elea DNAi — one-pager</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { background: #FFFFFF; display: flex; align-items: center; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+    body { background: #FFFFFF; display: flex; align-items: flex-start; justify-content: center; min-height: 100vh; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
     #__bundler_loading { position: fixed; bottom: 20px; right: 20px; font: 13px/1.4 -apple-system, BlinkMacSystemFont, sans-serif; color: #666; background: #fff; padding: 8px 14px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.12); z-index: 10000; }
     #__bundler_thumbnail { position: fixed; inset: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #FFFFFF; z-index: 9999; }
     #__bundler_thumbnail svg { width: 100%; height: 100%; object-fit: contain; }
@@ -20,7 +20,7 @@
     </div>
   </noscript>
 </head>
-<body>
+<body style="background:#FFFFFF;">
   <div id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#024059"></rect><g transform="translate(30 30) scale(0.1)"><path fill="#73CAC4" d="M281.7,91.4c0,26.9-21.8,48.7-48.7,48.7s-48.7-21.8-48.7-48.7,21.8-48.7,48.7-48.7,48.7,21.8,48.7,48.7ZM115.4,109.3c-26.9,0-48.7,21.8-48.7,48.7s21.8,48.7,48.7,48.7,48.7-21.8,48.7-48.7-21.8-48.7-48.7-48.7ZM106.8,240c-26.9,0-48.7,21.8-48.7,48.7s21.8,48.7,48.7,48.7,48.7-21.8,48.7-48.7-21.8-48.7-48.7-48.7ZM225.1,179.6c-26.9,0-48.7,21.8-48.7,48.7s21.8,48.7,48.7,48.7,48.7-21.8,48.7-48.7-21.8-48.7-48.7-48.7ZM316.5,146.1c-13.9,0-25.1,11.2-25.1,25.1s11.2,25.1,25.1,25.1,25.1-11.2,25.1-25.1-11.2-25.1-25.1-25.1ZM208.4,306.7c-13.9,0-25.1,11.2-25.1,25.1s11.2,25.1,25.1,25.1,25.1-11.2,25.1-25.1-11.2-25.1-25.1-25.1Z"></path></g></svg></div>
   <div id="__bundler_loading">Unpacking...</div>
 
@@ -409,6 +409,37 @@ document.addEventListener('DOMContentLoaded', async function() {
       apply();
       setTimeout(apply, 300);
       setTimeout(apply, 1200);
+      // Sofort reagieren, sobald doc-page in die Seite eingefügt wird
+      try {
+        var mo = new MutationObserver(function() { apply(); });
+        mo.observe(document.documentElement, { childList: true, subtree: true });
+        setTimeout(function() { mo.disconnect(); }, 4000);
+      } catch (e) {}
+    })();
+  </script>
+  <script>
+    // Skaliert das feste 1000px-Blatt auf schmalen Screens herunter,
+    // sodass es vollständig sichtbar ist (Desktop bleibt unverändert).
+    (function responsiveScale() {
+      var PAGE_WIDTH = 1000;
+      function scale() {
+        var page = document.querySelector('doc-page');
+        if (!page) return;
+        var avail = document.documentElement.clientWidth;
+        var factor = Math.min(1, avail / PAGE_WIDTH);
+        page.style.transformOrigin = 'top center';
+        page.style.transform = 'scale(' + factor + ')';
+        // Höhe des Containers an die skalierte Höhe anpassen, kein Leerraum
+        var h = page.getBoundingClientRect().height;
+        document.body.style.height = 'auto';
+        document.body.style.minHeight = '0';
+        document.documentElement.style.overflowX = 'hidden';
+      }
+      scale();
+      setTimeout(scale, 400);
+      setTimeout(scale, 1300);
+      window.addEventListener('resize', scale);
+      window.addEventListener('orientationchange', function() { setTimeout(scale, 200); });
     })();
   </script>
 </body>
