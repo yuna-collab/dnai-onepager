@@ -426,14 +426,19 @@ document.addEventListener('DOMContentLoaded', async function() {
         var page = document.querySelector('doc-page');
         if (!page) return;
         var avail = document.documentElement.clientWidth;
-        var factor = Math.min(1, avail / PAGE_WIDTH);
-        page.style.transformOrigin = 'top center';
-        page.style.transform = 'scale(' + factor + ')';
-        // Höhe des Containers an die skalierte Höhe anpassen, kein Leerraum
-        var h = page.getBoundingClientRect().height;
+        // Blatt füllt immer die volle verfügbare Breite (skaliert hoch UND runter),
+        // damit es auf jeder iframe-Breite gleich aussieht (Staging = Live)
+        var factor = avail / PAGE_WIDTH;
+        page.style.transformOrigin = 'top left';
+        var offset = Math.max(0, (avail - PAGE_WIDTH * factor) / 2);
+        page.style.transform = 'translateX(' + offset + 'px) scale(' + factor + ')';
         document.body.style.height = 'auto';
         document.body.style.minHeight = '0';
+        document.body.style.display = 'block';
         document.documentElement.style.overflowX = 'hidden';
+        // Container-Höhe an skaliertes Blatt anpassen, kein Leerraum unten
+        var scaledHeight = 1414 * factor;
+        document.body.style.height = scaledHeight + 'px';
       }
       scale();
       setTimeout(scale, 400);
