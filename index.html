@@ -10,7 +10,7 @@
     #__bundler_thumbnail { position: fixed; inset: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #FFFFFF; z-index: 9999; }
     #__bundler_thumbnail svg { width: 100%; height: 100%; object-fit: contain; }
     #__bundler_placeholder { color: #999; font-size: 14px; }
-    doc-page, doc-page::part(page), doc-page::part(pages) { background: #FFFFFF !important; margin: 0 !important; padding: 0 !important; box-shadow: none !important; }
+    doc-page, doc-page::part(page), doc-page::part(pages) { background: #FFFFFF !important; box-shadow: none !important; display: block !important; margin-left: auto !important; margin-right: auto !important; }
     html, body { background: #FFFFFF !important; }
   </style>
   <noscript>
@@ -389,15 +389,16 @@ document.addEventListener('DOMContentLoaded', async function() {
       function apply() {
         document.querySelectorAll('doc-page').forEach(function(dp) {
           dp.style.setProperty('background', '#FFFFFF', 'important');
-          dp.style.setProperty('margin', '0', 'important');
-          dp.style.setProperty('padding', '0', 'important');
+          dp.style.setProperty('margin-left', 'auto', 'important');
+          dp.style.setProperty('margin-right', 'auto', 'important');
           dp.style.setProperty('box-shadow', 'none', 'important');
+          dp.style.setProperty('display', 'block', 'important');
           if (dp.shadowRoot) {
             var s = dp.shadowRoot.querySelector('#__white_override');
             if (!s) {
               s = document.createElement('style');
               s.id = '__white_override';
-              s.textContent = ':host,*{background:#FFFFFF !important;box-shadow:none !important;margin:0 !important;}';
+              s.textContent = ':host,*{background:#FFFFFF !important;box-shadow:none !important;}';
               dp.shadowRoot.appendChild(s);
             }
           }
